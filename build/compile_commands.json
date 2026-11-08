@@ -1,0 +1,158 @@
+[
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/array.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/array.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/array.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/array.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/blob.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/blob.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/blob.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/blob.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/connection.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/connection.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/connection.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/connection.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/cursor.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/cursor.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/cursor.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/cursor.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/encodings.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/encodings.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/encodings.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/encodings.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/errorhandler.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/errorhandler.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/errorhandler.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/errorhandler.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/except.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/except.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/except.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/except.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/field.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/field.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/field.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/field.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/largeobject.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/largeobject.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/largeobject.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/largeobject.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/notification.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/notification.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/notification.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/notification.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/params.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/params.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/params.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/params.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/pipeline.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/pipeline.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/pipeline.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/pipeline.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/result.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/result.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/result.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/result.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/robusttransaction.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/robusttransaction.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/robusttransaction.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/robusttransaction.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/row.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/row.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/row.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/row.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/sql_cursor.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/sql_cursor.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/sql_cursor.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/sql_cursor.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/strconv.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/strconv.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/strconv.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/strconv.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/stream_from.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/stream_from.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/stream_from.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/stream_from.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/stream_to.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/stream_to.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/stream_to.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/stream_to.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/subtransaction.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/subtransaction.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/subtransaction.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/subtransaction.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/time.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/time.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/time.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/time.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/transaction.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/transaction.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/transaction.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/transaction.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/transaction_base.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/transaction_base.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/transaction_base.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/transaction_base.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/types.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/types.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/types.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/types.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/util.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/util.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/util.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/util.cxx.o"
+},
+{
+  "directory": "/home/erduha/Desktop/line_bot/build/build-pqxx/src",
+  "command": "/usr/bin/c++  -I/home/erduha/Desktop/line_bot/build/build-pqxx/include -I/home/erduha/Desktop/line_bot/deps/libpqxx/include -isystem /usr/include/postgresql -std=c++20 -o CMakeFiles/pqxx.dir/wait.cxx.o -c /home/erduha/Desktop/line_bot/deps/libpqxx/src/wait.cxx",
+  "file": "/home/erduha/Desktop/line_bot/deps/libpqxx/src/wait.cxx",
+  "output": "build-pqxx/src/CMakeFiles/pqxx.dir/wait.cxx.o"
+}
+]
