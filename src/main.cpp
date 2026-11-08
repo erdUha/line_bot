@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <optional>
 #include <httplib.h>
 #include <nlohmann/json.hpp>
 #include <pqxx/pqxx>
@@ -14,7 +15,7 @@ int main()
   {
     pqxx::connection cx(conn_str);
 
-    pqxx::work creating_tables(cx);
+    pqxx::work creating_tables{cx};
     creating_tables.exec(
       "CREATE TABLE IF NOT EXISTS users ("
       "   telegram_id BIGINT PRIMARY KEY,"
@@ -76,13 +77,39 @@ int main()
       pqxx::connection cx(conn_str);
       std::cout << "Connected to " << cx.dbname() << '\n';
 
-      pqxx::work checking_user{cx};
-      for (auto [telegram_id_pq, username_pq] : checking_user.query<long long, std::string>(
-          "SELECT telegram_id, username FROM users ORDER BY username"))
+      pqxx::work w{cx};
+
+      std::string check_username = "";
+
+      for (auto [q_un] : w.query<std::string>(
+            "SELECT username FROM users WHERE telegram_id = $1 LIMIT 1", telegram_id))
       {
-          std::cout << telegram_id_pq << ": " << username_pq << ".\n";
+        check_username = q_un;
       }
 
+      if (!check_username.empty())
+      {
+        std::cout << "username: " << check_username << '\n';
+        res.status = 200;
+        nlohmann::json responseObj = {
+          {"status", "success"},
+          {"message", "Logged in!"}
+        };
+        res.set_content(responseObj.dump(), "application/json");
+        return;
+      }
+
+      std::cout << "user not found! regestering...\n";
+
+      w.exec("INSERT INTO users VALUES ($1, $2, $3, $4)", pqxx::params{telegram_id, username, first_name, last_name});
+      w.commit();
+
+      nlohmann::json responseObj = {
+        {"status", "success"},
+        {"message", "Registered!"}
+      };
+
+      res.set_content(responseObj.dump(), "application/json");
     }
     catch (std::exception const &e)
     {
@@ -91,13 +118,6 @@ int main()
       res.set_content("Database connection failed", "text/plain");
       return;
     }
-
-    nlohmann::json responseObj = {
-      {"status", "success"},
-      {"message", "Success"}
-    };
-
-    res.set_content(responseObj.dump(), "application/json");
   });
 
   std::cout << "Listening on 0.0.0.0:8080...\n";
