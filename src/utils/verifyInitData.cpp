@@ -1,5 +1,3 @@
-#pragma once
-
 #include <openssl/hmac.h>
 #include <openssl/evp.h>
 #include <openssl/crypto.h>
@@ -11,6 +9,10 @@
 #include <array>
 #include <string_view>
 #include <stdexcept>
+
+#include "utils/tg.h"
+
+namespace utils {
 
 constexpr std::int64_t MAX_AGE = 3600;
 constexpr std::int64_t MAX_FUTURE_SKEW = 60;
@@ -102,4 +104,6 @@ bool verify_init_data(std::string& init_data_str,
     32
   ) == 0 &&
   !invalid_date;
+}
+
 }
