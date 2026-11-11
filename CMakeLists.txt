@@ -14,12 +14,14 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
 add_executable(line_bot ${SOURCES})
 
 add_subdirectory(deps/libpqxx build-pqxx)
+add_subdirectory(deps/json build-json)
+add_subdirectory(deps/cpp-httplib build-httplib)
 
 target_include_directories(line_bot PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_include_directories(line_bot PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/lib/cpp-httplib")
-target_include_directories(line_bot PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/lib/json/include")
 
 target_link_libraries(line_bot PRIVATE
   pqxx
+  nlohmann_json::nlohmann_json
+  httplib::httplib
   OpenSSL::Crypto
 )

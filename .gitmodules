@@ -1,8 +1,8 @@
 [submodule "lib/json"]
-    path = lib/json
+    path = deps/json
     url = https://github.com/nlohmann/json
 [submodule "lib/cpp-httplib"]
-    path = lib/cpp-httplib
+    path = deps/cpp-httplib
     url = https://github.com/yhirose/cpp-httplib
 [submodule "deps/libpqxx"]
     path = deps/libpqxx
