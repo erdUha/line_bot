@@ -17,7 +17,7 @@ namespace utils {
 constexpr std::int64_t MAX_AGE = 3600;
 constexpr std::int64_t MAX_FUTURE_SKEW = 60;
 
-std::array<unsigned char, 32> hex_to_bytes(std::string_view hex)
+std::array<unsigned char, 32> hex_to_bytes(const std::string_view& hex)
 {
   if (hex.size() != 64)
     throw std::invalid_argument("Invalid SHA256 hash length");
@@ -45,8 +45,8 @@ std::array<unsigned char, 32> hex_to_bytes(std::string_view hex)
   return bytes;
 }
 
-bool verify_init_data(std::string& init_data_str,
-                      std::map<std::string, std::string>& fields,
+bool verify_init_data(const std::string& init_data_str,
+                      const std::map<std::string, std::string>& fields,
                       const char* bot_token)
 {
   std::string data_check_string;
@@ -88,10 +88,10 @@ bool verify_init_data(std::string& init_data_str,
        &computed_len
   );
 
-  auto recieved_hash_bytes = hex_to_bytes(fields["hash"]);
+  auto recieved_hash_bytes = hex_to_bytes(fields.at("hash"));
 
   std::time_t now = std::time(nullptr);
-  std::int64_t auth_date = std::stoll(fields["auth_date"]);
+  std::int64_t auth_date = std::stoll(fields.at("auth_date"));
   bool invalid_date =
   auth_date < now - MAX_AGE ||
   auth_date > now + MAX_FUTURE_SKEW;

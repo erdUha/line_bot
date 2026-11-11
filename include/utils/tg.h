@@ -7,10 +7,10 @@
 
 namespace utils {
 
-  std::array<unsigned char, 32> hex_to_bytes(std::string_view hex);
+  std::array<unsigned char, 32> hex_to_bytes(const std::string_view& hex);
 
-  bool verify_init_data(std::string& init_data_str,
-                        std::map<std::string, std::string>& fields,
+  bool verify_init_data(const std::string& init_data_str,
+                        const std::map<std::string, std::string>& fields,
                         const char* bot_token);
 
 }
