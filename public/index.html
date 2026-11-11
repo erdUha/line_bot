@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,6 +28,25 @@
   <button id="sendBtn">Login</button>
   <h3 id="response"></h3>
 
+  <dialog id="lineDialog">
+    <h3>Create Line</h3>
+    <input
+      type="text"
+      id="lineName"
+      placeholder="Line name"
+      required
+    >
+
+    <input
+      type="date"
+      id="lineDate"
+      required
+    > <br><br>
+
+    <button onclick="createLine()">Create</button>
+    <button onclick="lineDialog.close()">Cancel</button>
+  </dialog>
+
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
@@ -41,6 +59,7 @@
 
     responseH3 = document.getElementById("response");
 
+    // not really needed
     if (userId)
     {
       fetch('/api/app_opened', {
@@ -49,10 +68,7 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          telegram_id: userId,
-          username: username,
-          first_name: firstName,
-          last_name: lastName
+          initData: tg.initData,
         })
       }).then(res => {
         if (!res.ok) throw new Error(`Server status: ${res.status}`);
@@ -66,6 +82,41 @@
     {
       console.log("Not running inside Telegram.");
     }
+
+    const lineDialog = document.getElementById("lineDialog");
+
+    function openDialog() {
+      lineDialog.showModal();
+    }
+
+    function createLine() {
+      const lineName = document.getElementById("lineName").value;
+      const lineDate = document.getElementById("lineDate").value;
+
+      fetch('/api/add_line', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          initData: tg.initData,
+          line_name: lineName,
+          line_date: lineDate
+        })
+      }).then(res => {
+        if (!res.ok) throw new Error(`Server status: ${res.status}`);
+        return res.json();
+      }).then(data => {
+        Telegram.WebApp.showAlert("Line created successfully!");
+      }).catch(error => {
+        console.error("Failed to send: ", error);
+        Telegram.WebApp.showAlert("Error. the line wasn't created!");
+      });
+
+      lineDialog.close();
+    }
+
+    openDialog();
 
   </script>
 </body>
