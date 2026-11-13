@@ -4,4 +4,4 @@ To clone the project, use `git clone --recurse-submodules https://github.com/erd
 
 ## Requirements on Debian/Ubuntu
 
-libssl-dev, cmake, postgresql
+libssl-dev, cmake, postgresql, gcc-14, g++-14
