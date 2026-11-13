@@ -90,6 +90,9 @@ int main()
   svr.Post("/api/new_line",
            handlers::new_line_handler(bot_token));
 
+  svr.Get("/api/get_lines",
+           handlers::get_lines_handler());
+
   std::cout << "Listening on 0.0.0.0:8080...\n";
   svr.listen("0.0.0.0", 8080);
 

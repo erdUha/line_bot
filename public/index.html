@@ -41,6 +41,7 @@
       id="lineName"
       placeholder="Line name"
     > <br>
+    Date:
     <input
       type="date"
       id="defenceDate"
@@ -78,7 +79,7 @@
         if (!res.ok) throw new Error(`Server status: ${res.status}`);
         return res.json();
       }).then(data => {
-        responseH3.innerText = data.message;
+        //responseH3.innerText = data.message;
       }).catch(error => {
         console.error("Failed to send: ", error);
       });
@@ -121,6 +122,18 @@
 
       lineDialog.close();
     }
+
+    fetch('/api/get_lines', {
+      method: 'GET'
+    }).then(res => {
+      if (!res.ok) throw new Error(`Server status: ${res.status}`);
+      return res.json();
+    }).then(data => {
+      responseH3.innerText = data.lines[0].creator_username;
+    }).catch(error => {
+      console.error("Failed to retireve data: ", error);
+      Telegram.WebApp.showAlert("Failed to get line data!");
+    });
   </script>
 </body>
 </html>
