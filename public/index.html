@@ -24,22 +24,26 @@
     </style>
 </head>
 <body>
-  <h2>My First Mini App. Hey</h2>
-  <button id="sendBtn">Login</button>
+  <h2>Defence Line Manager</h2>
+  <button onclick="openDialog()">Create new line</button>
   <h3 id="response"></h3>
 
   <dialog id="lineDialog">
     <h3>Create Line</h3>
     <input
       type="text"
+      id="courseName"
+      placeholder="Course name"
+      required
+    > <br>
+    <input
+      type="text"
       id="lineName"
       placeholder="Line name"
-      required
-    >
-
+    > <br>
     <input
       type="date"
-      id="lineDate"
+      id="defenceDate"
       required
     > <br><br>
 
@@ -90,24 +94,26 @@
     }
 
     function createLine() {
+      const courseName = document.getElementById("courseName").value;
       const lineName = document.getElementById("lineName").value;
-      const lineDate = document.getElementById("lineDate").value;
+      const defenceDate = document.getElementById("defenceDate").value;
 
-      fetch('/api/add_line', {
+      fetch('/api/new_line', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           initData: tg.initData,
+          course_name: courseName,
           line_name: lineName,
-          line_date: lineDate
+          defence_date: defenceDate
         })
       }).then(res => {
         if (!res.ok) throw new Error(`Server status: ${res.status}`);
         return res.json();
       }).then(data => {
-        Telegram.WebApp.showAlert("Line created successfully!");
+        Telegram.WebApp.showAlert(data.message);
       }).catch(error => {
         console.error("Failed to send: ", error);
         Telegram.WebApp.showAlert("Error. the line wasn't created!");
@@ -115,9 +121,6 @@
 
       lineDialog.close();
     }
-
-    openDialog();
-
   </script>
 </body>
 </html>

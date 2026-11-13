@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <pqxx/pqxx>
 
+#include "config.h"
 #include "handlers/users.h"
 #include "utils/tg.h"
 
@@ -18,7 +19,7 @@ httplib::Server::Handler app_opened_handler(const char* bot_token)
 
     try
     {
-      std::string init_data_str = json_body["initData"];
+      std::string init_data_str = json_body.at("initData");
 
       httplib::Params params;
       httplib::detail::parse_query_text(init_data_str, params);
@@ -33,7 +34,11 @@ httplib::Server::Handler app_opened_handler(const char* bot_token)
       {
         std::cerr << "User's hash was not verified or expired!";
         res.status = 401;
-        res.set_content("Your hash wasn't verified or request expired!", "text/plain");
+        nlohmann::json responseObj = {
+          {"status", "failure"},
+          {"message", "Your hash wasn't verified or request expired!"}
+        };
+        res.set_content(responseObj.dump(), "application/json");
         return;
       }
 
@@ -46,7 +51,7 @@ httplib::Server::Handler app_opened_handler(const char* bot_token)
 
       std::cout << username << " has opened the app!\n";
 
-      pqxx::connection cx(conn_str);
+      pqxx::connection cx(config::conn_str);
 
       pqxx::work w{cx};
 
@@ -83,7 +88,11 @@ httplib::Server::Handler app_opened_handler(const char* bot_token)
     {
       std::cerr << "ERROR: " << e.what() << '\n';
       res.status = 500;
-      res.set_content("Database connection failed", "text/plain");
+      nlohmann::json responseObj = {
+        {"status", "failure"},
+        {"message", "Server error!"}
+      };
+      res.set_content(responseObj.dump(), "application/json");
       return;
     }
   };

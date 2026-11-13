@@ -4,7 +4,8 @@
 #include <nlohmann/json.hpp>
 #include <pqxx/pqxx>
 
-#include "handlers/users.h"
+#include "config.h"
+#include "handlers/all_handlers.h"
 
 int main()
 {
@@ -20,7 +21,7 @@ int main()
 
   try
   {
-    pqxx::connection cx(conn_str);
+    pqxx::connection cx(config::conn_str);
 
     pqxx::work creating_tables{cx};
     creating_tables.exec(
@@ -35,8 +36,14 @@ int main()
     creating_tables.exec(
       "CREATE TABLE IF NOT EXISTS lines ("
       "   line_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,"
-      "   line_name VARCHAR(255) NOT NULL,"
-      "   line_date DATE NOT NULL"
+      "   course_name VARCHAR(255) NOT NULL,"
+      "   line_name VARCHAR(255),"
+      "   defence_date DATE NOT NULL,"
+      "   creator_id BIGINT NOT NULL,"
+      "   CONSTRAINT fk_user"
+      "     FOREIGN KEY (creator_id)"
+      "     REFERENCES users(telegram_id)"
+      "     ON DELETE SET NULL"
       ");"
     );
 
@@ -44,9 +51,15 @@ int main()
       "CREATE TABLE IF NOT EXISTS seats ("
       "   seat_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,"
       "   line_id BIGINT NOT NULL,"
-      "   booked_by_user BIGINT,"
-      "   CONSTRAINT fk_line FOREIGN KEY (line_id) REFERENCES lines(line_id) ON DELETE CASCADE,"
-      "   CONSTRAINT fk_user FOREIGN KEY (booked_by_user) REFERENCES users(telegram_id) ON DELETE SET NULL"
+      "   booked_by_user BIGINT NOT NULL,"
+      "   CONSTRAINT fk_line"
+      "     FOREIGN KEY (line_id)"
+      "     REFERENCES lines(line_id)"
+      "     ON DELETE CASCADE,"
+      "   CONSTRAINT fk_user"
+      "     FOREIGN KEY (booked_by_user)"
+      "     REFERENCES users(telegram_id)"
+      "     ON DELETE SET NULL"
       ");"
     );
     creating_tables.commit();
@@ -71,7 +84,11 @@ int main()
     res.set_content("OK", "text/plain");
   });
 
-  svr.Post("/api/app_opened", handlers::app_opened_handler(bot_token));
+  svr.Post("/api/app_opened",
+           handlers::app_opened_handler(bot_token));
+
+  svr.Post("/api/new_line",
+           handlers::new_line_handler(bot_token));
 
   std::cout << "Listening on 0.0.0.0:8080...\n";
   svr.listen("0.0.0.0", 8080);
