@@ -1,0 +1,4 @@
+#pragma once
+#include <string>
+
+#define DATABASE_URL "@DATABASE_URL@"

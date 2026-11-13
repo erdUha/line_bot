@@ -51,7 +51,7 @@ httplib::Server::Handler app_opened_handler(const char* bot_token)
 
       std::cout << username << " has opened the app!\n";
 
-      pqxx::connection cx(config::conn_str);
+      pqxx::connection cx(DATABASE_URL);
 
       pqxx::work w{cx};
 

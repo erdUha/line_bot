@@ -59,7 +59,7 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
 
       std::cout << "Line creation started!\n";
 
-      pqxx::connection cx(config::conn_str);
+      pqxx::connection cx(DATABASE_URL);
 
       pqxx::work w{cx};
 

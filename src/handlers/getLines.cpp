@@ -15,7 +15,7 @@ httplib::Server::Handler get_lines_handler()
   {
     try
     {
-      pqxx::connection cx(config::conn_str);
+      pqxx::connection cx(DATABASE_URL);
 
       pqxx::work w{cx};
 
