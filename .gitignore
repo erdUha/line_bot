@@ -20,3 +20,7 @@ build/*
 #cmake-build-*
 .vercel
 .env*
+
+# Kate
+*~
+*.kate-swp
