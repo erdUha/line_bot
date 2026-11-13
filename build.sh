@@ -2,7 +2,7 @@
 set -e
 
 cmake -S . -B ./build
-cmake --build ./build
+cmake --build ./build -j $(nproc)
 
 echo
 ./build/line_bot
