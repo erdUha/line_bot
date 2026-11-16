@@ -75,12 +75,20 @@ int main()
     return 1;
   }
 
-  auto ret = svr.set_mount_point("/", "./public");
-  if (!ret)
-  {
-    std::cerr << "The 'public' directory doesn't exist!" << std::endl;
-    return 1;
-  }
+  //auto ret = svr.set_mount_point("/", "./public");
+  //if (!ret)
+  //{
+  //  std::cerr << "The 'public' directory doesn't exist!" << std::endl;
+  //  return 1;
+  //}
+
+  svr.Get("/", [](const auto& req, auto& res) {
+    res.set_file_content("./public/index.html");
+  });
+
+  svr.Get("/line", [](const auto& req, auto& res) {
+    res.set_file_content("./public/line.html");
+  });
 
   svr.Post("/webhook", [](const httplib::Request &req, httplib::Response &res) {
     std::cout << "Recieved update:\n" << req.body << std::endl;

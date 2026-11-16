@@ -3,6 +3,7 @@
 #include <openssl/crypto.h>
 #include <ctime>
 #include <cstdint>
+#include <iostream>
 #include <string>
 #include <cstring>
 #include <cstdlib>

@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 1. Include the Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -26,7 +25,7 @@
 <body>
   <h2>Defence Line Manager</h2>
   <button onclick="openDialog()">Create new line</button>
-  <h3 id="response"></h3>
+  <h3 style="display: none;" id="response"></h3>
 
   <dialog id="lineDialog">
     <h3>Create Line</h3>
@@ -35,12 +34,13 @@
       id="courseName"
       placeholder="Course name"
       required
-    > <br>
+    > <br><br>
     <input
       type="text"
       id="lineName"
       placeholder="Line name"
-    > <br>
+      required
+    > <br><br>
     Date:
     <input
       type="date"
@@ -52,6 +52,20 @@
     <button onclick="lineDialog.close()">Cancel</button>
   </dialog>
 
+  <h3>Upcoming lines:</h3>
+
+  <table id="linesTable">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Line Name</th>
+        <th>Defence date</th>
+        <th>Open</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
@@ -62,9 +76,10 @@
     const firstName = tg.initDataUnsafe?.user?.first_name;
     const lastName = tg.initDataUnsafe?.user?.last_name;
 
+    is_admin = false;
+
     responseH3 = document.getElementById("response");
 
-    // not really needed
     if (userId)
     {
       fetch('/api/app_opened', {
@@ -76,10 +91,10 @@
           initData: tg.initData,
         })
       }).then(res => {
-        if (!res.ok) throw new Error(`Server status: ${res.status}`);
         return res.json();
       }).then(data => {
-        //responseH3.innerText = data.message;
+        is_admin = data.is_admin;
+        responseH3.innerText = "is_admin: " + data.is_admin;
       }).catch(error => {
         console.error("Failed to send: ", error);
       });
@@ -92,6 +107,38 @@
 
     function openDialog() {
       lineDialog.showModal();
+    }
+
+    linesTableBody = document.getElementById("linesTable").tBodies[0];
+
+    function getLines() {
+      fetch('/api/get_lines', {
+        method: 'GET'
+      }).then(res => {
+        return res.json();
+      }).then(data => {
+        responseH3.innerText = data.lines.length;
+        linesTableBody.innerHTML = '';
+        data.lines.forEach(line => {
+          let row = linesTableBody.insertRow();
+          row.insertCell().textContent = line.course_name;
+          row.insertCell().textContent = line.line_name;
+          row.insertCell().textContent = line.defence_date;
+          let newButton = document.createElement('BUTTON');
+          newButton.innerText = "->";
+          newButton.onclick = function() {openLine(line.line_id)};
+          row.insertCell().appendChild(newButton);
+        });
+      }).catch(error => {
+        console.error("Failed to retireve data: ", error);
+        Telegram.WebApp.showAlert("Failed to get line data!");
+      });
+    }
+
+    getLines();
+
+    function openLine(lineId) {
+      window.location.href = "/line?line_id=" + lineId;
     }
 
     function createLine() {
@@ -111,29 +158,17 @@
           defence_date: defenceDate
         })
       }).then(res => {
-        if (!res.ok) throw new Error(`Server status: ${res.status}`);
-        return res.json();
+       return res.json();
       }).then(data => {
         Telegram.WebApp.showAlert(data.message);
+        getLines();
       }).catch(error => {
         console.error("Failed to send: ", error);
-        Telegram.WebApp.showAlert("Error. the line wasn't created!");
+        Telegram.WebApp.showAlert("Server error: " + error.message);
       });
 
       lineDialog.close();
     }
-
-    fetch('/api/get_lines', {
-      method: 'GET'
-    }).then(res => {
-      if (!res.ok) throw new Error(`Server status: ${res.status}`);
-      return res.json();
-    }).then(data => {
-      responseH3.innerText = data.lines[0].creator_username;
-    }).catch(error => {
-      console.error("Failed to retireve data: ", error);
-      Telegram.WebApp.showAlert("Failed to get line data!");
-    });
   </script>
 </body>
 </html>

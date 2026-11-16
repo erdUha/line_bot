@@ -2,3 +2,4 @@
 #include <string>
 
 #define DATABASE_URL "@DATABASE_URL@"
+#define ADMIN_TG_ID @ADMIN_TG_ID@

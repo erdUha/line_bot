@@ -49,26 +49,27 @@ httplib::Server::Handler app_opened_handler(const char* bot_token)
       std::string first_name = user_json.at("first_name").get<std::string>();
       std::string last_name = user_json.at("last_name").get<std::string>();
 
-      std::cout << username << " has opened the app!\n";
+      bool is_admin = telegram_id == ADMIN_TG_ID;
 
       pqxx::connection cx(DATABASE_URL);
 
       pqxx::work w{cx};
 
-      std::string check_username = "";
+      std::string check_user = "";
 
       for (auto [q_un] : w.query<std::string>(
             "SELECT username FROM users WHERE telegram_id = $1 LIMIT 1", telegram_id))
       {
-        check_username = q_un;
+        check_user = q_un;
       }
 
-      if (!check_username.empty())
+      if (!check_user.empty())
       {
         res.status = 200;
         nlohmann::json responseObj = {
           {"status", "success"},
-          {"message", "Logged in!"}
+          {"message", "Logged in!"},
+          {"is_admin", is_admin}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;
@@ -79,7 +80,8 @@ httplib::Server::Handler app_opened_handler(const char* bot_token)
 
       nlohmann::json responseObj = {
         {"status", "success"},
-        {"message", "Registered!"}
+        {"message", "Registered!"},
+        {"is_admin", is_admin}
       };
 
       res.set_content(responseObj.dump(), "application/json");

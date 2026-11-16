@@ -11,6 +11,12 @@ endif()
 
 set(DATABASE_URL "$ENV{DATABASE_URL}")
 
+if(NOT DEFINED ENV{ADMIN_TG_ID})
+    message(FATAL_ERROR "ADMIN_TG_ID is not set")
+endif()
+
+set(ADMIN_TG_ID "$ENV{ADMIN_TG_ID}")
+
 configure_file(
     "${CMAKE_SOURCE_DIR}/include/config.h.in"
     "${CMAKE_BINARY_DIR}/generated/config.h"

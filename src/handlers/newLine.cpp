@@ -46,6 +46,17 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
       std::string line_name = json_body.at("line_name").get<std::string>();
       std::string defence_date = json_body.at("defence_date").get<std::string>();
 
+      if (course_name.size() < 3)
+      {
+        res.status = 401;
+        nlohmann::json responseObj = {
+          {"status", "failure"},
+          {"message", "Course name should contain at least 3 characters!"}
+        };
+        res.set_content(responseObj.dump(), "application/json");
+        return;
+      }
+
       if (course_name.size() > 255)
       {
         res.status = 401;
@@ -57,7 +68,27 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
         return;
       }
 
-      std::cout << "Line creation started!\n";
+      if (line_name.size() < 3)
+      {
+        res.status = 401;
+        nlohmann::json responseObj = {
+          {"status", "failure"},
+          {"message", "Line name should contain at least 3 characters!"}
+        };
+        res.set_content(responseObj.dump(), "application/json");
+        return;
+      }
+
+      if (line_name.size() > 255)
+      {
+        res.status = 401;
+        nlohmann::json responseObj = {
+          {"status", "failure"},
+          {"message", "Line name length shouldn't exceed 255!"}
+        };
+        res.set_content(responseObj.dump(), "application/json");
+        return;
+      }
 
       pqxx::connection cx(DATABASE_URL);
 
@@ -72,11 +103,14 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
                defence_date,
                creator_id
              });
+
       w.commit();
+
+      std::cout << "Line " << line_name << " has been successfully created!\n";
 
       nlohmann::json responseObj = {
         {"status", "success"},
-        {"message", "Successfully create a line!"}
+        {"message", "Successfully created the line!"}
       };
 
       res.set_content(responseObj.dump(), "application/json");
