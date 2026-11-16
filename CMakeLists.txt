@@ -18,8 +18,8 @@ endif()
 set(ADMIN_TG_ID "$ENV{ADMIN_TG_ID}")
 
 configure_file(
-    "${CMAKE_SOURCE_DIR}/include/config.h.in"
-    "${CMAKE_BINARY_DIR}/generated/config.h"
+    "${CMAKE_SOURCE_DIR}/include/config.hpp.in"
+    "${CMAKE_BINARY_DIR}/generated/config.hpp"
     @ONLY
 )
 

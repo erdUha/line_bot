@@ -4,8 +4,8 @@
 #include <nlohmann/json.hpp>
 #include <pqxx/pqxx>
 
-#include "config.h"
-#include "handlers/all_handlers.h"
+#include "config.hpp"
+#include "handlers/all_handlers.hpp"
 
 int main()
 {

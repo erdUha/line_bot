@@ -5,9 +5,9 @@
 #include <nlohmann/json.hpp>
 #include <pqxx/pqxx>
 
-#include "config.h"
-#include "handlers/lines.h"
-#include "utils/tg.h"
+#include "config.hpp"
+#include "handlers/lines.hpp"
+#include "utils/tg.hpp"
 
 namespace handlers {
 
