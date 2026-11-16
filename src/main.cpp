@@ -19,6 +19,10 @@ int main()
 
   httplib::Server svr;
 
+  svr.set_payload_max_length(1024 * 1024); // 1 MiB
+  svr.set_read_timeout(5, 0);
+  svr.set_write_timeout(5, 0);
+
   try
   {
     pqxx::connection cx(DATABASE_URL);
