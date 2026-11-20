@@ -42,6 +42,32 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
 
       std::int64_t creator_id = user_json.at("id").get<std::int64_t>();
 
+      pqxx::connection cx(DATABASE_URL);
+
+      pqxx::work w{cx};
+
+      std::string check_user = "";
+
+      for (auto [q_un] : w.query<std::string>(
+              "SELECT username FROM users WHERE telegram_id = $1 LIMIT 1",
+              creator_id
+            )
+          )
+      {
+        check_user = q_un;
+      }
+
+      if (check_user.empty())
+      {
+        res.status = 401;
+        nlohmann::json responseObj = {
+          {"status", "failure"},
+          {"message", "You are not authorized to create lines!"}
+        };
+        res.set_content(responseObj.dump(), "application/json");
+        return;
+      }
+
       std::string course_name = json_body.at("course_name").get<std::string>();
       std::string line_name = json_body.at("line_name").get<std::string>();
       std::string defence_date = json_body.at("defence_date").get<std::string>();
@@ -89,10 +115,6 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
         res.set_content(responseObj.dump(), "application/json");
         return;
       }
-
-      pqxx::connection cx(DATABASE_URL);
-
-      pqxx::work w{cx};
 
       w.exec("INSERT INTO lines"
              "  (course_name, line_name, defence_date, creator_id)"

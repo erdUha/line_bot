@@ -61,6 +61,10 @@ httplib::Server::Handler new_user_handler(const char* bot_token)
       }
 
       const auto new_user = json_body.at("new_user");
+      std::int64_t new_tg_id = new_user.at("telegram_id").get<std::int64_t>();
+      std::string new_username = new_user.at("username").get<std::string>();
+      std::string new_first_name = new_user.at("first_name").get<std::string>();
+      std::string new_last_name = new_user.at("last_name").get<std::string>();
 
       pqxx::connection cx(DATABASE_URL);
 
@@ -69,8 +73,8 @@ httplib::Server::Handler new_user_handler(const char* bot_token)
       std::string check_user = "";
 
       for (auto [q_un] : w.query<std::string>(
-            "SELECT username FROM users WHERE telegram_id = $1 LIMIT 1",
-            new_user.at("telegram_id").get<std::int64_t>()
+              "SELECT username FROM users WHERE telegram_id = $1 LIMIT 1",
+              new_tg_id
             )
           )
       {
@@ -90,11 +94,11 @@ httplib::Server::Handler new_user_handler(const char* bot_token)
 
       w.exec("INSERT INTO users VALUES ($1, $2, $3, $4)",
             pqxx::params{
-              new_user.at("telegram_id").get<std::int64_t>(),
-              new_user.at("username").get<std::string>(),
-              new_user.at("first_name").get<std::string>(),
-              new_user.at("last_name").get<std::string>()
-            }
+                new_tg_id,
+                new_username,
+                new_first_name,
+                new_last_name
+              }
             );
       w.commit();
 

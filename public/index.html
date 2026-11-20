@@ -24,7 +24,12 @@
 </head>
 <body>
   <h2>Defence Line Manager</h2>
-  <button onclick="openDialog()">Create new line</button>
+  <button onclick="openLineDialog()">Create new line</button>
+  <button id="newUserButton"
+          style="display: none;"
+          onclick="openNewUserDialog()">
+            Add new user
+  </button>
   <h3 style="display: none;" id="response"></h3>
 
   <dialog id="lineDialog">
@@ -52,13 +57,43 @@
     <button onclick="lineDialog.close()">Cancel</button>
   </dialog>
 
+  <dialog id="newUserDialog">
+    <h3>Add new user</h3>
+    <input
+      type="text"
+      id="newUserTgId"
+      placeholder="Telegram ID"
+      required
+    > <br><br>
+    <input
+      type="text"
+      id="newUserName"
+      placeholder="Username"
+      required
+    > <br><br>
+    <input
+      type="text"
+      id="newUserFirstName"
+      placeholder="First Name"
+      required
+    > <br><br>
+    <input
+      type="text"
+      id="newUserLastName"
+      placeholder="Last Name"
+    > <br><br>
+
+    <button onclick="addUser()">Add</button>
+    <button onclick="newUserDialog.close()">Cancel</button>
+  </dialog>
+
   <h3>Upcoming lines:</h3>
 
   <table id="linesTable">
     <thead>
       <tr>
         <th>Course</th>
-        <th>Line Name</th>
+        <th>Line name</th>
         <th>Defence date</th>
         <th>Open</th>
       </tr>
@@ -78,6 +113,7 @@
 
     is_admin = false;
 
+    newUserButton = document.getElementById("newUserButton");
     responseH3 = document.getElementById("response");
 
     if (userId)
@@ -94,6 +130,9 @@
         return res.json();
       }).then(data => {
         is_admin = data.is_admin;
+        if (is_admin) {
+          newUserButton.style.display = "inline-block";
+        }
         responseH3.innerText = "is_admin: " + data.is_admin;
       }).catch(error => {
         console.error("Failed to send: ", error);
@@ -101,12 +140,6 @@
     } else
     {
       console.log("Not running inside Telegram.");
-    }
-
-    const lineDialog = document.getElementById("lineDialog");
-
-    function openDialog() {
-      lineDialog.showModal();
     }
 
     linesTableBody = document.getElementById("linesTable").tBodies[0];
@@ -126,7 +159,7 @@
           row.insertCell().textContent = line.defence_date;
           let newButton = document.createElement('BUTTON');
           newButton.innerText = "->";
-          newButton.onclick = function() {openLine(line.line_id)};
+          newButton.onclick = function() {redirectLine(line.line_id)};
           row.insertCell().appendChild(newButton);
         });
       }).catch(error => {
@@ -137,7 +170,13 @@
 
     getLines();
 
-    function openLine(lineId) {
+    const lineDialog = document.getElementById("lineDialog");
+
+    function openLineDialog() {
+      lineDialog.showModal();
+    }
+
+    function redirectLine(lineId) {
       window.location.href = "/line?line_id=" + lineId;
     }
 
@@ -168,6 +207,47 @@
       });
 
       lineDialog.close();
+    }
+
+    const newUserDialog = document.getElementById("newUserDialog");
+
+    function openNewUserDialog() {
+      newUserDialog.showModal();
+    }
+
+    function addUser() {
+      if (!is_admin) {
+        Telegram.WebApp.showAlert("Not an admin!");
+        return;
+      }
+
+      const newUserTgId = Number(document.getElementById("newUserTgId").value);
+      const newUserName = document.getElementById("newUserName").value;
+      const newUserFirstName = document.getElementById("newUserFirstName").value;
+      const newUserLastName = document.getElementById("newUserLastName").value;
+
+      fetch('/api/admin/new_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          initData: tg.initData,
+          new_user: {
+            telegram_id: newUserTgId,
+            username: newUserName,
+            first_name: newUserFirstName,
+            last_name: newUserLastName
+          }
+        })
+      }).then(res => {
+       return res.json();
+      }).then(data => {
+        Telegram.WebApp.showAlert(data.message);
+      }).catch(error => {
+        console.error("Failed to send: ", error);
+        Telegram.WebApp.showAlert("Server error: " + error.message);
+      });
     }
   </script>
 </body>
