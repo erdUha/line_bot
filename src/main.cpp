@@ -99,6 +99,9 @@ int main()
   svr.Post("/api/app_opened",
            handlers::app_opened_handler(bot_token));
 
+  svr.Post("/api/admin/new_user",
+           handlers::new_user_handler(bot_token));
+
   svr.Post("/api/new_line",
            handlers::new_line_handler(bot_token));
 

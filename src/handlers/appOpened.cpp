@@ -75,12 +75,13 @@ httplib::Server::Handler app_opened_handler(const char* bot_token)
         return;
       }
 
-      w.exec("INSERT INTO users VALUES ($1, $2, $3, $4)", pqxx::params{telegram_id, username, first_name, last_name});
-      w.commit();
+      // No registration!
+      //w.exec("INSERT INTO users VALUES ($1, $2, $3, $4)", pqxx::params{telegram_id, username, first_name, last_name});
+      //w.commit();
 
       nlohmann::json responseObj = {
-        {"status", "success"},
-        {"message", "Registered!"},
+        {"status", "failure"},
+        {"message", "You are not authorized to use the manager! Contact the creator of the bot."},
         {"is_admin", is_admin}
       };
 
