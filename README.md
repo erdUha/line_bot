@@ -23,3 +23,10 @@ ADMIN_TG_ID=[admin_telegram_id]
 ADMIN_USERNAME=[admin_username]
 GROUP_PASSWORD='[bcrypt_password_hash]'
 ```
+### Group password hash generation using bash
+
+Use `htpasswd` command from `apache2-utils` package to automatically append .env file with your group password:
+
+```bash
+printf "GROUP_PASSWORD='%s'\n" (htpasswd -bnBC 10 '' [group_password] | tr -d ':\n') >> .env
+```
