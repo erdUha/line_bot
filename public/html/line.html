@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  <button onclick='window.location.href = "/"'>Back</button>
+  <button onclick='openReserveDialog()'>Reserve a Spot</button>
+  <button onclick='openRemovalConfirmationDialog()'>Remove My Spot</button>
+  <h2 id="lineName"></h2>
+  <h4 id="courseName"></h4>
+  <h5 id="creator"></h5>
+
+  <table id="reservationsTable">
+    <thead>
+      <tr>
+        <th>Position</th>
+        <th>Student</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <dialog id="reserveDialog">
+    <h3>Reserve a Spot</h3>
+    Position:&nbsp
+    <input
+      type="number"
+      id="position"
+      min="1" step="1"
+      value="1"
+      required
+    > <br><br>
+
+    <button onclick="createReservation()">Reserve</button>
+    <button onclick="reserveDialog.close()">Cancel</button>
+  </dialog>
+
+  <dialog id="removalConfirmationDialog">
+    <h3>Are you deadass?</h3>
+    <p id="positionToDelete"></p>
+    <button onclick="removeMySpot()">Yes</button>
+    <button onclick="removalConfirmationDialog.close()">No</button>
+  </dialog>
+
+  <script src="scripts/line.js"></script>
+</body>
+</html>

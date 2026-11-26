@@ -15,10 +15,10 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
 {
   return [bot_token](const httplib::Request& req, httplib::Response& res)
   {
-    auto json_body = nlohmann::json::parse(req.body);
-
     try
     {
+      auto json_body = nlohmann::json::parse(req.body);
+
       std::string init_data_str = json_body.at("initData");
 
       httplib::Params params;
@@ -32,9 +32,12 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
 
       if (!valid)
       {
-        std::cerr << "User's hash was not verified or expired!";
         res.status = 401;
-        res.set_content("Your hash wasn't verified or request expired!", "text/plain");
+        nlohmann::json responseObj = {
+          {"status", "failure"},
+          {"message", "Your hash wasn't verified or request expired!"}
+        };
+        res.set_content(responseObj.dump(), "application/json");
         return;
       }
 
@@ -48,13 +51,14 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
 
       std::string check_user = "";
 
-      for (auto [q_un] : w.query<std::string>(
-              "SELECT username FROM users WHERE telegram_id = $1 LIMIT 1",
+      for (auto [q_fn] : w.query<std::string>(
+              "SELECT first_name FROM users"
+              "  WHERE telegram_id = $1 LIMIT 1",
               creator_id
             )
           )
       {
-        check_user = q_un;
+        check_user = q_fn;
       }
 
       if (check_user.empty())
@@ -70,14 +74,15 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
 
       std::string course_name = json_body.at("course_name").get<std::string>();
       std::string line_name = json_body.at("line_name").get<std::string>();
+      bool is_group_work = json_body.at("is_group_work").get<bool>();
       std::string defence_date = json_body.at("defence_date").get<std::string>();
 
-      if (course_name.size() < 3)
+      if (course_name.size() < 2)
       {
         res.status = 401;
         nlohmann::json responseObj = {
           {"status", "failure"},
-          {"message", "Course name should contain at least 3 characters!"}
+          {"message", "Course name should contain at least 2 characters!"}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;
@@ -94,12 +99,12 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
         return;
       }
 
-      if (line_name.size() < 3)
+      if (line_name.size() < 2)
       {
         res.status = 401;
         nlohmann::json responseObj = {
           {"status", "failure"},
-          {"message", "Line name should contain at least 3 characters!"}
+          {"message", "Line name should contain at least 2 characters!"}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;
@@ -117,11 +122,12 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
       }
 
       w.exec("INSERT INTO lines"
-             "  (course_name, line_name, defence_date, creator_id)"
-             "  VALUES ($1, $2, $3, $4)",
+             "  (course_name, line_name, is_group_work, defence_date, creator_id)"
+             "  VALUES ($1, $2, $3, $4, $5)",
              pqxx::params{
                course_name,
                line_name,
+               is_group_work,
                defence_date,
                creator_id
              });
@@ -139,11 +145,11 @@ httplib::Server::Handler new_line_handler(const char* bot_token)
     }
     catch (std::exception const &e)
     {
-      std::cerr << "ERROR: " << e.what() << '\n';
+      std::cerr << "[new_line_handler] ERROR: " << e.what() << '\n';
       res.status = 500;
       nlohmann::json responseObj = {
         {"status", "failure"},
-        {"message", "Server error!"}
+        {"message", "Internal server error"}
       };
       res.set_content(responseObj.dump(), "application/json");
       return;

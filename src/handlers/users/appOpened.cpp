@@ -9,9 +9,10 @@
 #include "handlers/users.hpp"
 #include "utils/tg.hpp"
 
+//TODO: proper registration with group password
 namespace handlers {
 
-httplib::Server::Handler new_user_handler(const char* bot_token)
+httplib::Server::Handler app_opened_handler(const char* bot_token)
 {
   return [bot_token](const httplib::Request& req, httplib::Response& res)
   {
@@ -32,7 +33,6 @@ httplib::Server::Handler new_user_handler(const char* bot_token)
 
       if (!valid)
       {
-        std::cerr << "User's hash was not verified or expired!";
         res.status = 401;
         nlohmann::json responseObj = {
           {"status", "failure"},
@@ -42,29 +42,14 @@ httplib::Server::Handler new_user_handler(const char* bot_token)
         return;
       }
 
-
       const auto user_json = nlohmann::json::parse(fields["user"]);
 
       std::int64_t telegram_id = user_json.at("id").get<std::int64_t>();
+      std::string username = user_json.at("username").get<std::string>();
+      std::string first_name = user_json.at("first_name").get<std::string>();
+      std::string last_name = user_json.at("last_name").get<std::string>();
 
       bool is_admin = telegram_id == ADMIN_TG_ID;
-
-      if (!is_admin)
-      {
-        res.status = 401;
-        nlohmann::json responseObj = {
-          {"status", "failure"},
-          {"message", "You should be the admin to add new users!"}
-        };
-        res.set_content(responseObj.dump(), "application/json");
-        return;
-      }
-
-      const auto new_user = json_body.at("new_user");
-      std::int64_t new_tg_id = new_user.at("telegram_id").get<std::int64_t>();
-      std::string new_username = new_user.at("username").get<std::string>();
-      std::string new_first_name = new_user.at("first_name").get<std::string>();
-      std::string new_last_name = new_user.at("last_name").get<std::string>();
 
       pqxx::connection cx(DATABASE_URL);
 
@@ -72,50 +57,44 @@ httplib::Server::Handler new_user_handler(const char* bot_token)
 
       std::string check_user = "";
 
-      for (auto [q_un] : w.query<std::string>(
-              "SELECT username FROM users WHERE telegram_id = $1 LIMIT 1",
-              new_tg_id
-            )
-          )
+      for (auto [q_fn] : w.query<std::string>(
+            "SELECT first_name FROM users"
+            "  WHERE telegram_id = $1 LIMIT 1", telegram_id))
       {
-        check_user = q_un;
+        check_user = q_fn;
       }
 
-      if (!check_user.empty())
+      if (check_user.empty())
       {
         res.status = 401;
         nlohmann::json responseObj = {
           {"status", "failure"},
-          {"message", "User is already in the DB!"}
+          {"message", "You are not authorized to use the manager! Contact the creator of the bot."},
+          {"is_admin", is_admin}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;
       }
 
-      w.exec("INSERT INTO users VALUES ($1, $2, $3, $4)",
-            pqxx::params{
-                new_tg_id,
-                new_username,
-                new_first_name,
-                new_last_name
-              }
-            );
-      w.commit();
+      // No registration!
+      //w.exec("INSERT INTO users VALUES ($1, $2, $3, $4)", pqxx::params{telegram_id, username, first_name, last_name});
+      //w.commit();
 
+      res.status = 200;
       nlohmann::json responseObj = {
         {"status", "success"},
-        {"message", "New user was registered successfully!"}
+        {"message", "Logged in!"},
+        {"is_admin", is_admin}
       };
-
       res.set_content(responseObj.dump(), "application/json");
     }
     catch (std::exception const &e)
     {
-      std::cerr << "ERROR: " << e.what() << '\n';
+      std::cerr << "[app_opened_handler] ERROR: " << e.what() << '\n';
       res.status = 500;
       nlohmann::json responseObj = {
         {"status", "failure"},
-        {"message", "Server error!"}
+        {"message", "Internal server error"}
       };
       res.set_content(responseObj.dump(), "application/json");
       return;

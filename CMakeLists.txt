@@ -17,6 +17,12 @@ endif()
 
 set(ADMIN_TG_ID "$ENV{ADMIN_TG_ID}")
 
+if(NOT DEFINED ENV{ADMIN_USERNAME})
+    message(FATAL_ERROR "ADMIN_USERNAME is not set")
+endif()
+
+set(ADMIN_USERNAME "$ENV{ADMIN_USERNAME}")
+
 configure_file(
     "${CMAKE_SOURCE_DIR}/include/config.hpp.in"
     "${CMAKE_BINARY_DIR}/generated/config.hpp"
