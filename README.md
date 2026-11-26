@@ -12,6 +12,8 @@ sudo apt update && sudo apt install libssl-dev cmake postgresql gcc-14 g++-14 li
 
 ## Environment setup
 
+For configuration create `.env` file in the project root directory
+
 Sample `.env` file:
 
 ```env
