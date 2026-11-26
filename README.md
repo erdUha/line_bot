@@ -28,5 +28,5 @@ GROUP_PASSWORD='[bcrypt_password_hash]'
 Use `htpasswd` command from `apache2-utils` package to automatically append .env file with your group password:
 
 ```bash
-printf "GROUP_PASSWORD='%s'\n" (htpasswd -bnBC 10 '' [group_password] | tr -d ':\n') >> .env
+printf "GROUP_PASSWORD='%s'\n" $(htpasswd -bnBC 10 '' [group_password] | tr -d ':\n') >> .env
 ```
