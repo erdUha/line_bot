@@ -1,5 +1,11 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+if [ -f .env ]; then
+  set -a
+  source .env
+  set +a
+fi
 
 cmake -S . -B ./build \
     -DCMAKE_C_COMPILER=gcc-14 \

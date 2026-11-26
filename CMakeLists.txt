@@ -23,6 +23,13 @@ endif()
 
 set(ADMIN_USERNAME "$ENV{ADMIN_USERNAME}")
 
+if(NOT DEFINED ENV{GROUP_PASSWORD})
+    message(FATAL_ERROR "GROUP_PASSWORD is not set")
+endif()
+
+set(GROUP_PASSWORD "$ENV{GROUP_PASSWORD}")
+
+
 configure_file(
     "${CMAKE_SOURCE_DIR}/include/config.hpp.in"
     "${CMAKE_BINARY_DIR}/generated/config.hpp"
@@ -51,4 +58,5 @@ target_link_libraries(line_bot PRIVATE
   nlohmann_json::nlohmann_json
   httplib::httplib
   OpenSSL::Crypto
+  crypt
 )
