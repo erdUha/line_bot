@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#define BOT_TOKEN "@LINE_BOT_TOKEN@"
 #define DATABASE_URL "@DATABASE_URL@"
 #define ADMIN_TG_ID @ADMIN_TG_ID@
 #define ADMIN_USERNAME @ADMIN_USERNAME@
+#define GROUP_PASSWORD @GROUP_PASSWORD@
