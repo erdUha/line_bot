@@ -4,7 +4,11 @@ To clone the project, use `git clone --recurse-submodules https://github.com/erd
 
 ## Requirements on Debian/Ubuntu
 
-`sudo apt update && sudo apt install libssl-dev cmake postgresql gcc-14 g++-14 libpq-dev pkg-config`
+To install all needed packages run:
+
+```bash
+sudo apt update && sudo apt install libssl-dev cmake postgresql gcc-14 g++-14 libpq-dev
+```
 
 ## Environment setup
 
