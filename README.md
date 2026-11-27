@@ -33,7 +33,7 @@ LINE_BOT_TOKEN=[bot_token]
 DATABASE_URL='dbname=line user=[db_user] password=[db_password] host=db port=5432'
 POSTGRES_DB=line
 POSTGRES_USER=[db_user]
-POSTGRES_PASSWORD={db_password]
+POSTGRES_PASSWORD=[db_password]
 ADMIN_TG_ID=[admin_telegram_id]
 ADMIN_USERNAME=[admin_username]
 GROUP_PASSWORD='[bcrypt_password_hash]'
