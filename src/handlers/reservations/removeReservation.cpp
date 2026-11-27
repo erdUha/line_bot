@@ -6,7 +6,7 @@
 #include <pqxx/pqxx>
 
 #include "config.hpp"
-#include "handlers/lines.hpp"
+#include "handlers/reservations.hpp"
 #include "utils/tg.hpp"
 
 namespace handlers {
@@ -43,7 +43,7 @@ httplib::Server::Handler remove_reservation_handler(const char* bot_token)
 
       const auto user_json = nlohmann::json::parse(fields["user"]);
 
-      std::uint64_t creator_id = user_json.at("id").get<std::int64_t>();
+      std::int64_t creator_id = user_json.at("id").get<std::int64_t>();
 
       pqxx::connection cx(DATABASE_URL);
 
@@ -66,7 +66,7 @@ httplib::Server::Handler remove_reservation_handler(const char* bot_token)
         res.status = 401;
         nlohmann::json responseObj = {
           {"status", "failure"},
-          {"message", "You are not authorized to remove spots!"}
+          {"message", "You are not authorized to remove a reservation!"}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;

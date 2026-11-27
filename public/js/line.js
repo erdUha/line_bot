@@ -11,6 +11,11 @@ const lineName = document.getElementById('lineName');
 const courseName = document.getElementById('courseName');
 const creator = document.getElementById('creator');
 
+const userId = tg.initDataUnsafe?.user?.id;
+const username = tg.initDataUnsafe?.user?.username;
+const firstName = tg.initDataUnsafe?.user?.first_name;
+const lastName = tg.initDataUnsafe?.user?.last_name;
+
 const positionInput = document.getElementById("position");
 
 function getLine(lineId) {
@@ -32,6 +37,9 @@ function getLine(lineId) {
     lineName.innerText = data.line.line_name;
     courseName.innerText = "Course: " + data.line.course_name;
     creator.innerText = "Creator: " + data.line.creator_name;
+    if (userId === data.line.creator_id) {
+      document.getElementById("removeLineButton").style.display = "inline-block";
+    }
   }).catch(error => {
     console.error("Failed to retireve data: ", error);
     Telegram.WebApp.showAlert("Failed to get line data!: " + error);
@@ -39,6 +47,29 @@ function getLine(lineId) {
 }
 
 getLine(lineId);
+
+function removeLine() {
+  fetch('/api/remove_line', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      initData: tg.initData,
+      line_id: lineId
+    })
+  }).then(res => {
+    return res.json();
+  }).then(data => {
+    if (data.status !== "success") {
+      throw new Error(data.message || "Unknown server error");
+    }
+    window.location.href = '/';
+  }).catch(error => {
+    console.error("Failed to retireve data: ", error);
+    Telegram.WebApp.showAlert("Failed to remove line!: " + error);
+  });
+}
 
 reservationsTableBody = document.getElementById("reservationsTable").tBodies[0];
 
@@ -77,6 +108,12 @@ function getReservations(lineId) {
 }
 
 getReservations(lineId);
+
+const lineRemovalConfirmationDialog = document.getElementById("lineRemovalConfirmationDialog");
+
+function openLineRemovalConfirmationDialog() {
+  lineRemovalConfirmationDialog.showModal();
+}
 
 const reserveDialog = document.getElementById("reserveDialog");
 
@@ -119,9 +156,9 @@ function createReservation() {
   reserveDialog.close();
 }
 
-const removalConfirmationDialog = document.getElementById("removalConfirmationDialog");
+const reservationRemovalConfirmationDialog = document.getElementById("reservationRemovalConfirmationDialog");
 
-function openRemovalConfirmationDialog() {
+function openReservationRemovalConfirmationDialog() {
   fetch('/api/get_reservations', {
     method: 'POST',
     headers: {
@@ -147,7 +184,7 @@ function openRemovalConfirmationDialog() {
 
     positionToDelete.innerText = "Position: " + data.reservation.position;
 
-    removalConfirmationDialog.showModal();
+    reservationRemovalConfirmationDialog.showModal();
   }).catch(error => {
     console.error("Failed to send: ", error);
     Telegram.WebApp.showAlert("Server error: " + error.message);
@@ -177,5 +214,5 @@ function removeMySpot() {
     Telegram.WebApp.showAlert("Server error: " + error.message);
   });
 
-  removalConfirmationDialog.close();
+  reservationRemovalConfirmationDialog.close();
 }

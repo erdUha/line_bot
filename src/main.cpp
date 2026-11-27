@@ -113,6 +113,9 @@ int main()
   svr.Post("/api/new_line",
            handlers::new_line_handler(BOT_TOKEN));
 
+  svr.Post("/api/remove_line",
+           handlers::remove_line_handler(BOT_TOKEN));
+
   svr.Post("/api/get_lines",
            handlers::get_lines_handler(BOT_TOKEN));
 
