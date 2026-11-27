@@ -7,7 +7,7 @@ if [ -f .env ]; then
   set +a
 fi
 
-cmake -S . -B ./build \
+cmake -B ./build -G Ninja \
     -DCMAKE_C_COMPILER=gcc-14 \
     -DCMAKE_CXX_COMPILER=g++-14 \
     -DCMAKE_CXX_STANDARD=20

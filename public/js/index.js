@@ -12,6 +12,8 @@ is_admin = false;
 newUserButton = document.getElementById("newUserButton");
 responseH3 = document.getElementById("response");
 
+//document.getElementById("registerDialog").showModal();
+
 if (userId)
 {
   fetch('/api/app_opened', {

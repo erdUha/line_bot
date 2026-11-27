@@ -125,8 +125,8 @@ int main()
   svr.Post("/api/get_reservations",
            handlers::get_reservations_handler(BOT_TOKEN));
 
-  std::cout << "Listening on 0.0.0.0:8080...\n";
-  svr.listen("0.0.0.0", 8080);
+  std::cout << "Listening on 0.0.0.0:" << PORT << "...\n";
+  svr.listen("0.0.0.0", PORT);
 
   return 0;
 }

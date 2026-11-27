@@ -1,0 +1,45 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      secrets:
+        - dotenv
+    container_name: cpp_line_bot
+    restart: unless-stopped
+    env_file:
+      - .env-docker
+    ports:
+      - "${PORT:-8080}:${PORT:-8080}"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - bot_net
+
+  db:
+    image: postgres:17-alpine
+    container_name: cpp_bot_postgres
+    restart: unless-stopped
+    env_file:
+      - .env-docker
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bot_net
+
+secrets:
+  dotenv:
+    file: .env-docker
+
+volumes:
+  pgdata:
+
+networks:
+  bot_net:
+    driver: bridge

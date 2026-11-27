@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+#define PORT @PORT@
 #define BOT_TOKEN "@LINE_BOT_TOKEN@"
 #define DATABASE_URL "@DATABASE_URL@"
 #define ADMIN_TG_ID @ADMIN_TG_ID@
