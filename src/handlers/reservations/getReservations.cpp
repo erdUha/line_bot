@@ -42,12 +42,19 @@ nlohmann::json get_all_reservations(pqxx::work& w, std::int64_t line_id)
 {
   nlohmann::json select_reservations = nlohmann::json::array();
 
-  for (auto [q_p, q_fn] : w.query<int, std::string>(
-          "SELECT r.position, u.first_name"
+  for (auto [q_p, q_u] : w.query<int, std::string>(
+          "SELECT r.position,"
+          "  json_agg("
+          "    json_build_object("
+          "      'first_name', u.first_name,"
+          "      'last_name', u.last_name"
+          "    )"
+          "  )"
           "  FROM reservations r"
           "  JOIN users u"
           "  ON r.reserved_by_id = u.telegram_id"
           "  WHERE r.line_id = $1"
+          "  GROUP BY r.position"
           "  ORDER BY r.position",
           line_id
         )
@@ -55,7 +62,7 @@ nlohmann::json get_all_reservations(pqxx::work& w, std::int64_t line_id)
   {
     select_reservations.push_back({
       {"position", q_p},
-      {"reserved_by", q_fn}
+      {"reserved_by", nlohmann::json::parse(q_u)}
     });
   }
 
@@ -94,7 +101,11 @@ httplib::Server::Handler get_reservations_handler(const std::string& bot_token)
 
       const auto user_json = nlohmann::json::parse(fields["user"]);
 
-      const std::int64_t user_telegram_id = user_json.at("id").get<std::int64_t>();
+      std::int64_t user_telegram_id = user_json.at("id").get<std::int64_t>();
+
+#ifdef DEBUG
+      user_telegram_id++;
+#endif
 
       pqxx::connection cx(DATABASE_URL);
 
@@ -141,6 +152,7 @@ httplib::Server::Handler get_reservations_handler(const std::string& bot_token)
       else
       {
         nlohmann::json select_all_reservations = get_all_reservations(w, line_id);
+        nlohmann::json select_one_reservation = get_one_reservation(w, line_id, user_telegram_id);
 
         std::int64_t user_count = w.query_value<std::int64_t>(
           "SELECT COUNT(*) FROM users"
@@ -150,6 +162,7 @@ httplib::Server::Handler get_reservations_handler(const std::string& bot_token)
           {"status", "success"},
           {"message", "OK"},
           {"reservations", select_all_reservations},
+          {"my_reservation", select_one_reservation},
           {"user_count", user_count}
         };
       }

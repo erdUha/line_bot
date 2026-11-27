@@ -45,6 +45,10 @@ httplib::Server::Handler remove_reservation_handler(const std::string& bot_token
 
       std::int64_t creator_id = user_json.at("id").get<std::int64_t>();
 
+#ifdef DEBUG
+      creator_id++;
+#endif
+
       pqxx::connection cx(DATABASE_URL);
 
       pqxx::work w{cx};

@@ -8,7 +8,11 @@
 <body>
   <button onclick='window.location.href = "/"'>Back</button>
   <button onclick='openReserveDialog()'>Reserve a Spot</button>
-  <button onclick='openReservationRemovalConfirmationDialog()'>Remove My Spot</button>
+  <button id="removeMySpotButton"
+          style="display: none;"
+          onclick='openReservationRemovalConfirmationDialog()'>
+            Remove My Spot
+  </button>
   <button id="removeLineButton"
           onclick='openLineRemovalConfirmationDialog()'
           style="display: none;">
@@ -22,7 +26,11 @@
     <thead>
       <tr>
         <th>Position</th>
-        <th>Student</th>
+        <th id="studentColumn">Student</th>
+        <th id="joinGroupColumn"
+            style="display: none;">
+              Join Group
+        </th>
       </tr>
     </thead>
     <tbody></tbody>

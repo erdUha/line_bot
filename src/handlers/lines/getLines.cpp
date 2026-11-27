@@ -14,15 +14,17 @@ nlohmann::json get_one_line(pqxx::work& w, const std::int64_t line_id)
 {
   nlohmann::json select_line;
 
-  for (auto [q_li, q_cn, q_ln, q_dd, q_ti, q_fn] :
+  for (auto [q_li, q_cn, q_ln, q_dd, q_igw, q_ti, q_fn] :
         w.query<int64_t,
                 std::string,
                 std::string,
                 std::string,
+                bool,
                 std::int64_t,
                 std::string>(
           "SELECT l.line_id, l.course_name,"
-          "  l.line_name, l.defence_date, u.telegram_id, u.first_name"
+          "  l.line_name, l.defence_date, l.is_group_work,"
+          "  u.telegram_id, u.first_name"
           "  FROM lines l"
           "  JOIN users u"
           "  ON l.creator_id = u.telegram_id"
@@ -36,6 +38,7 @@ nlohmann::json get_one_line(pqxx::work& w, const std::int64_t line_id)
       {"course_name", q_cn},
       {"line_name", q_ln},
       {"defence_date", q_dd},
+      {"is_group_work", q_igw},
       {"creator_id", q_ti},
       {"creator_name", q_fn}
     };

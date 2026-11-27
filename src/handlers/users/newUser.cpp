@@ -93,7 +93,7 @@ httplib::Server::Handler new_user_handler(const std::string& bot_token)
       }
 
       w.exec("INSERT INTO users"
-             "VALUES ($1, $2, $3, $4)",
+             "  VALUES ($1, $2, $3, $4)",
              pqxx::params{
                  new_tg_id,
                  new_username,
