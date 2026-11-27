@@ -36,7 +36,7 @@ nlohmann::json get_all_users(pqxx::work& w)
   return select_users;
 }
 
-httplib::Server::Handler get_users_handler(const char* bot_token)
+httplib::Server::Handler get_users_handler(const std::string& bot_token)
 {
   return [bot_token](const httplib::Request& req, httplib::Response& res)
   {

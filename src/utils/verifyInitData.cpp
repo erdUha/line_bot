@@ -48,7 +48,7 @@ std::array<unsigned char, 32> hex_to_bytes(const std::string_view& hex)
 
 bool verify_init_data(const std::string& init_data_str,
                       const std::map<std::string, std::string>& fields,
-                      const char* bot_token)
+                      const std::string& bot_token)
 {
   std::string data_check_string;
 
@@ -70,8 +70,8 @@ bool verify_init_data(const std::string& init_data_str,
     EVP_sha256(),
        "WebAppData",
        10,
-       reinterpret_cast<const unsigned char*>(bot_token),
-       std::strlen(bot_token),
+       reinterpret_cast<const unsigned char*>(bot_token.data()),
+       bot_token.size(),
        secret,
        &secret_len
   );

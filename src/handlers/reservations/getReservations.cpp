@@ -62,7 +62,7 @@ nlohmann::json get_all_reservations(pqxx::work& w, std::int64_t line_id)
   return select_reservations;
 }
 
-httplib::Server::Handler get_reservations_handler(const char* bot_token)
+httplib::Server::Handler get_reservations_handler(const std::string& bot_token)
 {
   return [bot_token](const httplib::Request& req, httplib::Response& res)
   {

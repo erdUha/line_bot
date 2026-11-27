@@ -11,6 +11,6 @@ namespace utils {
 
   bool verify_init_data(const std::string& init_data_str,
                         const std::map<std::string, std::string>& fields,
-                        const char* bot_token);
+                        const std::string& bot_token);
 
 }

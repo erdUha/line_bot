@@ -77,7 +77,7 @@ nlohmann::json get_multiple_lines(pqxx::work& w)
   return select_lines;
 }
 
-httplib::Server::Handler get_lines_handler(const char* bot_token)
+httplib::Server::Handler get_lines_handler(const std::string& bot_token)
 {
   return [bot_token](const httplib::Request& req, httplib::Response& res)
   {

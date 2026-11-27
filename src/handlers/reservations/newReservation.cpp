@@ -11,7 +11,7 @@
 
 namespace handlers {
 
-httplib::Server::Handler new_reservation_handler(const char* bot_token)
+httplib::Server::Handler new_reservation_handler(const std::string& bot_token)
 {
   return [bot_token](const httplib::Request& req, httplib::Response& res)
   {
