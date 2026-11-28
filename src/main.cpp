@@ -97,11 +97,11 @@ int main()
     res.set_file_content("./public/html/line.html");
   });
 
-  svr.Post("/webhook", [](const httplib::Request &req, httplib::Response &res) {
-    std::cout << "Recieved update:\n" << req.body << std::endl;
-
-    res.set_content("OK", "text/plain");
-  });
+  //svr.Post("/webhook", [](const httplib::Request &req, httplib::Response &res) {
+  //  std::cout << "Recieved update:\n" << req.body << std::endl;
+  //
+  //  res.set_content("OK", "text/plain");
+  //});
 
   svr.Post("/api/app_opened",
            handlers::app_opened_handler(config));

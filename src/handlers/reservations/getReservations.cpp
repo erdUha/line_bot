@@ -103,10 +103,6 @@ httplib::Server::Handler get_reservations_handler(const Config& config)
 
       std::int64_t user_telegram_id = user_json.at("id").get<std::int64_t>();
 
-#ifdef DEBUG
-      user_telegram_id++;
-#endif
-
       pqxx::connection cx(config.database_url);
 
       pqxx::work w{cx};

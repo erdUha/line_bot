@@ -22,7 +22,7 @@ LINE_BOT_TOKEN=[bot_token]
 DATABASE_URL='dbname=line user=[db_user] password=[db_password] host=127.0.0.1 port=5432'
 ADMIN_TG_ID=[admin_telegram_id]
 ADMIN_USERNAME=[admin_username]
-GROUP_PASSWORD='[bcrypt_password_hash]'
+GROUP_PASSWORD_HASH='[bcrypt_password_hash]'
 ```
 
 Sample `.env-docker` file for docker-compose build:
@@ -36,14 +36,14 @@ POSTGRES_USER=[db_user]
 POSTGRES_PASSWORD=[db_password]
 ADMIN_TG_ID=[admin_telegram_id]
 ADMIN_USERNAME=[admin_username]
-GROUP_PASSWORD='[bcrypt_password_hash]'
+GROUP_PASSWORD_HASH='[bcrypt_password_hash]'
 ```
 ### Group password hash generation using bash
 
 Use `htpasswd` command from `apache2-utils` package to automatically append .env file with your group password hash:
 
 ```bash
-printf "GROUP_PASSWORD='%s'\n" $(htpasswd -bnBC 10 '' [group_password] | tr -d ':\n') >> .env
+printf "GROUP_PASSWORD_HASH='%s'\n" $(htpasswd -bnBC 10 '' [group_password] | tr -d ':\n') >> .env
 ```
 
 ## Running on Debian/Ubuntu

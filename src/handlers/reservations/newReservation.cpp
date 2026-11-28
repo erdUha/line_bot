@@ -45,10 +45,6 @@ httplib::Server::Handler new_reservation_handler(const Config& config)
 
       std::uint64_t creator_id = user_json.at("id").get<std::int64_t>();
 
-#ifdef DEBUG
-      creator_id++;
-#endif
-
       pqxx::connection cx(config.database_url);
 
       pqxx::work w{cx};
