@@ -56,13 +56,19 @@ Run:
 
 ## Docker
 
-To run the project in docker mode use `docker-compose`:
+Install docker:
+
+```bash
+sudo apt update && sudo apt install -y docker.io docker-compose
+```
+
+To run the project in docker mode use `docker compose`:
 
 ```bash
 sudo docker compose --env-file .env-docker up --build
 ```
 
-After .env-docker changes run:
+After any `.env-docker` changes run:
 
 ```bash
 sudo docker compose --env-file .env-docker build --no-cache

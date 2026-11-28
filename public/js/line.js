@@ -90,7 +90,8 @@ function getLine(lineId) {
     }
     lineName.innerText = data.line.line_name;
     courseName.innerText = "Course: " + data.line.course_name;
-    creator.innerText = "Creator: " + data.line.creator_name;
+    let initial = data.line.creator_last_name ? ` ${data.line.creator_last_name[0]}.` : "";
+    creator.innerText = "Creator: " + data.line.creator_first_name + initial;
     if (userId === data.line.creator_id) {
       document.getElementById("removeLineButton").style.display = "inline-block";
     }

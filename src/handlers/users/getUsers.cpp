@@ -6,7 +6,7 @@
 
 #include "config.hpp"
 #include "handlers/lines.hpp"
-#include "utils/tg.hpp"
+#include "utils.hpp"
 
 namespace handlers {
 
@@ -36,9 +36,9 @@ nlohmann::json get_all_users(pqxx::work& w)
   return select_users;
 }
 
-httplib::Server::Handler get_users_handler(const std::string& bot_token)
+httplib::Server::Handler get_users_handler(const Config& config)
 {
-  return [bot_token](const httplib::Request& req, httplib::Response& res)
+  return [config](const httplib::Request& req, httplib::Response& res)
   {
     try
     {
@@ -53,7 +53,7 @@ httplib::Server::Handler get_users_handler(const std::string& bot_token)
         fields[key] = value;
       }
 
-      bool valid = utils::verify_init_data(init_data_str, fields, bot_token);
+      bool valid = utils::verify_init_data(init_data_str, fields, config.bot_token);
 
       if (!valid)
       {
@@ -70,7 +70,7 @@ httplib::Server::Handler get_users_handler(const std::string& bot_token)
 
       const std::int64_t user_telegram_id = user_json.at("id").get<std::int64_t>();
 
-      pqxx::connection cx(DATABASE_URL);
+      pqxx::connection cx(config.database_url);
 
       pqxx::work w{cx};
 

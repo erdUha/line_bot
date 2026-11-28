@@ -9,6 +9,8 @@
 
 int main()
 {
+  const auto& config = Config::get();
+
   httplib::Server svr;
 
   svr.set_payload_max_length(1024 * 1024); // 1 MiB
@@ -17,7 +19,7 @@ int main()
 
   try
   {
-    pqxx::connection cx(DATABASE_URL);
+    pqxx::connection cx(config.database_url);
 
     pqxx::work creating_tables{cx};
     creating_tables.exec(
@@ -102,34 +104,34 @@ int main()
   });
 
   svr.Post("/api/app_opened",
-           handlers::app_opened_handler(BOT_TOKEN));
+           handlers::app_opened_handler(config));
 
-  svr.Post("/api/admin/new_user",
-           handlers::new_user_handler(BOT_TOKEN));
+  svr.Post("/api/register",
+           handlers::register_handler(config));
 
   svr.Post("/api/get_users",
-           handlers::get_users_handler(BOT_TOKEN));
+           handlers::get_users_handler(config));
 
   svr.Post("/api/new_line",
-           handlers::new_line_handler(BOT_TOKEN));
+           handlers::new_line_handler(config));
 
   svr.Post("/api/remove_line",
-           handlers::remove_line_handler(BOT_TOKEN));
+           handlers::remove_line_handler(config));
 
   svr.Post("/api/get_lines",
-           handlers::get_lines_handler(BOT_TOKEN));
+           handlers::get_lines_handler(config));
 
   svr.Post("/api/new_reservation",
-           handlers::new_reservation_handler(BOT_TOKEN));
+           handlers::new_reservation_handler(config));
 
   svr.Post("/api/remove_reservation",
-           handlers::remove_reservation_handler(BOT_TOKEN));
+           handlers::remove_reservation_handler(config));
 
   svr.Post("/api/get_reservations",
-           handlers::get_reservations_handler(BOT_TOKEN));
+           handlers::get_reservations_handler(config));
 
-  std::cout << "Listening on 0.0.0.0:" << PORT << "...\n";
-  svr.listen("0.0.0.0", PORT);
+  std::cout << "Listening on 0.0.0.0:" << config.port << "...\n";
+  svr.listen("0.0.0.0", config.port);
 
   return 0;
 }

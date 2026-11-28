@@ -1,19 +1,37 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <chrono>
+#include <sstream>
+#include <string>
 #include <httplib.h>
 #include <nlohmann/json.hpp>
 #include <pqxx/pqxx>
 
 #include "config.hpp"
 #include "handlers/lines.hpp"
-#include "utils/tg.hpp"
+#include "utils.hpp"
 
 namespace handlers {
 
-httplib::Server::Handler new_line_handler(const std::string& bot_token)
+bool is_valid_date(const std::string& date_str) {
+  if (date_str.size() != 10) return false;
+
+  std::istringstream ss{date_str};
+  std::chrono::year_month_day ymd{};
+  ss >> std::chrono::parse("%F", ymd);
+
+  if (ss.fail() || ss.peek() != EOF || !ymd.ok()) {
+    return false;
+  }
+
+  auto today = std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now());
+  return std::chrono::sys_days{ymd} >= today;
+}
+
+httplib::Server::Handler new_line_handler(const Config& config)
 {
-  return [bot_token](const httplib::Request& req, httplib::Response& res)
+  return [config](const httplib::Request& req, httplib::Response& res)
   {
     try
     {
@@ -28,7 +46,7 @@ httplib::Server::Handler new_line_handler(const std::string& bot_token)
         fields[key] = value;
       }
 
-      bool valid = utils::verify_init_data(init_data_str, fields, bot_token);
+      bool valid = utils::verify_init_data(init_data_str, fields, config.bot_token);
 
       if (!valid)
       {
@@ -45,7 +63,7 @@ httplib::Server::Handler new_line_handler(const std::string& bot_token)
 
       std::int64_t creator_id = user_json.at("id").get<std::int64_t>();
 
-      pqxx::connection cx(DATABASE_URL);
+      pqxx::connection cx(config.database_url);
 
       pqxx::work w{cx};
 
@@ -77,49 +95,47 @@ httplib::Server::Handler new_line_handler(const std::string& bot_token)
       bool is_group_work = json_body.at("is_group_work").get<bool>();
       std::string defence_date = json_body.at("defence_date").get<std::string>();
 
+      bool is_input_fail = false;
+      std::string fail_message;
+
       if (course_name.size() < 2)
       {
-        res.status = 401;
-        nlohmann::json responseObj = {
-          {"status", "failure"},
-          {"message", "Course name should contain at least 2 characters!"}
-        };
-        res.set_content(responseObj.dump(), "application/json");
-        return;
+        is_input_fail = true;
+        fail_message = "Course name should contain at least 2 characters!";
       }
-
       if (course_name.size() > 255)
       {
-        res.status = 401;
-        nlohmann::json responseObj = {
-          {"status", "failure"},
-          {"message", "Course name length shouldn't exceed 255!"}
-        };
-        res.set_content(responseObj.dump(), "application/json");
-        return;
+        is_input_fail = true;
+        fail_message = "Course name length shouldn't exceed 255!";
       }
-
       if (line_name.size() < 2)
       {
+        is_input_fail = true;
+        fail_message = "Line name should contain at least 2 characters!";
+      }
+      if (line_name.size() > 255)
+      {
+        is_input_fail = true;
+        fail_message = "Line name length shouldn't exceed 255!";
+      }
+      if (!is_valid_date(defence_date))
+      {
+        is_input_fail = true;
+        fail_message = "Assignment date is invalid or before today!";
+      }
+
+
+      if (is_input_fail)
+      {
         res.status = 401;
         nlohmann::json responseObj = {
           {"status", "failure"},
-          {"message", "Line name should contain at least 2 characters!"}
+          {"message", fail_message}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;
       }
 
-      if (line_name.size() > 255)
-      {
-        res.status = 401;
-        nlohmann::json responseObj = {
-          {"status", "failure"},
-          {"message", "Line name length shouldn't exceed 255!"}
-        };
-        res.set_content(responseObj.dump(), "application/json");
-        return;
-      }
 
       w.exec("INSERT INTO lines"
              "  (course_name, line_name, is_group_work, defence_date, creator_id)"

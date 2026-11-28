@@ -6,7 +6,7 @@
 
 #include "config.hpp"
 #include "handlers/lines.hpp"
-#include "utils/tg.hpp"
+#include "utils.hpp"
 
 namespace handlers {
 
@@ -14,17 +14,18 @@ nlohmann::json get_one_line(pqxx::work& w, const std::int64_t line_id)
 {
   nlohmann::json select_line;
 
-  for (auto [q_li, q_cn, q_ln, q_dd, q_igw, q_ti, q_fn] :
+  for (auto [q_li, q_cn, q_lin, q_dd, q_igw, q_ti, q_fn, q_ln] :
         w.query<int64_t,
                 std::string,
                 std::string,
                 std::string,
                 bool,
                 std::int64_t,
+                std::string,
                 std::string>(
           "SELECT l.line_id, l.course_name,"
           "  l.line_name, l.defence_date, l.is_group_work,"
-          "  u.telegram_id, u.first_name"
+          "  u.telegram_id, u.first_name, u.last_name"
           "  FROM lines l"
           "  JOIN users u"
           "  ON l.creator_id = u.telegram_id"
@@ -36,11 +37,12 @@ nlohmann::json get_one_line(pqxx::work& w, const std::int64_t line_id)
     select_line = {
       {"line_id", q_li},
       {"course_name", q_cn},
-      {"line_name", q_ln},
+      {"line_name", q_lin},
       {"defence_date", q_dd},
       {"is_group_work", q_igw},
       {"creator_id", q_ti},
-      {"creator_name", q_fn}
+      {"creator_first_name", q_fn},
+      {"creator_last_name", q_ln}
     };
   }
 
@@ -80,9 +82,9 @@ nlohmann::json get_multiple_lines(pqxx::work& w)
   return select_lines;
 }
 
-httplib::Server::Handler get_lines_handler(const std::string& bot_token)
+httplib::Server::Handler get_lines_handler(const Config& config)
 {
-  return [bot_token](const httplib::Request& req, httplib::Response& res)
+  return [config](const httplib::Request& req, httplib::Response& res)
   {
     try
     {
@@ -97,7 +99,7 @@ httplib::Server::Handler get_lines_handler(const std::string& bot_token)
         fields[key] = value;
       }
 
-      bool valid = utils::verify_init_data(init_data_str, fields, bot_token);
+      bool valid = utils::verify_init_data(init_data_str, fields, config.bot_token);
 
       if (!valid)
       {
@@ -114,7 +116,7 @@ httplib::Server::Handler get_lines_handler(const std::string& bot_token)
 
       const std::int64_t user_telegram_id = user_json.at("id").get<std::int64_t>();
 
-      pqxx::connection cx(DATABASE_URL);
+      pqxx::connection cx(config.database_url);
 
       pqxx::work w{cx};
 

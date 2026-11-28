@@ -7,14 +7,13 @@
 
 #include "config.hpp"
 #include "handlers/users.hpp"
-#include "utils/tg.hpp"
+#include "utils.hpp"
 
-//TODO: proper registration with group password
 namespace handlers {
 
-httplib::Server::Handler app_opened_handler(const std::string& bot_token)
+httplib::Server::Handler app_opened_handler(const Config& config)
 {
-  return [bot_token](const httplib::Request& req, httplib::Response& res)
+  return [config](const httplib::Request& req, httplib::Response& res)
   {
     auto json_body = nlohmann::json::parse(req.body);
 
@@ -29,7 +28,7 @@ httplib::Server::Handler app_opened_handler(const std::string& bot_token)
         fields[key] = value;
       }
 
-      bool valid = utils::verify_init_data(init_data_str, fields, bot_token);
+      bool valid = utils::verify_init_data(init_data_str, fields, config.bot_token);
 
       if (!valid)
       {
@@ -49,9 +48,9 @@ httplib::Server::Handler app_opened_handler(const std::string& bot_token)
       std::string first_name = user_json.at("first_name").get<std::string>();
       std::string last_name = user_json.at("last_name").get<std::string>();
 
-      bool is_admin = telegram_id == ADMIN_TG_ID;
+      bool is_admin = telegram_id == config.admin_tg_id;
 
-      pqxx::connection cx(DATABASE_URL);
+      pqxx::connection cx(config.database_url);
 
       pqxx::work w{cx};
 
@@ -66,19 +65,15 @@ httplib::Server::Handler app_opened_handler(const std::string& bot_token)
 
       if (check_user.empty())
       {
-        res.status = 401;
+        res.status = 404;
         nlohmann::json responseObj = {
-          {"status", "failure"},
-          {"message", "You are not authorized to use the manager! Contact the creator of the bot."},
-          {"is_admin", is_admin}
+          {"status", "registration"},
+          {"message", "You need to register in the app"},
+          {"admin_username", config.admin_username}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;
       }
-
-      // No registration!
-      //w.exec("INSERT INTO users VALUES ($1, $2, $3, $4)", pqxx::params{telegram_id, username, first_name, last_name});
-      //w.commit();
 
       res.status = 200;
       nlohmann::json responseObj = {

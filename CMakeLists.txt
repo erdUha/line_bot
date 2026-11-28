@@ -5,49 +5,6 @@ project(shadows VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(NOT DEFINED ENV{PORT})
-    message(FATAL_ERROR "PORT is not set")
-endif()
-
-set(PORT "$ENV{PORT}")
-
-if(NOT DEFINED ENV{LINE_BOT_TOKEN})
-    message(FATAL_ERROR "LINE_BOT_TOKEN is not set")
-endif()
-
-set(LINE_BOT_TOKEN "$ENV{LINE_BOT_TOKEN}")
-
-if(NOT DEFINED ENV{DATABASE_URL})
-    message(FATAL_ERROR "DATABASE_URL is not set")
-endif()
-
-set(DATABASE_URL "$ENV{DATABASE_URL}")
-
-if(NOT DEFINED ENV{ADMIN_TG_ID})
-    message(FATAL_ERROR "ADMIN_TG_ID is not set")
-endif()
-
-set(ADMIN_TG_ID "$ENV{ADMIN_TG_ID}")
-
-if(NOT DEFINED ENV{ADMIN_USERNAME})
-    message(FATAL_ERROR "ADMIN_USERNAME is not set")
-endif()
-
-set(ADMIN_USERNAME "$ENV{ADMIN_USERNAME}")
-
-if(NOT DEFINED ENV{GROUP_PASSWORD})
-    message(FATAL_ERROR "GROUP_PASSWORD is not set")
-endif()
-
-set(GROUP_PASSWORD "$ENV{GROUP_PASSWORD}")
-
-
-configure_file(
-    "${CMAKE_SOURCE_DIR}/include/config.hpp.in"
-    "${CMAKE_BINARY_DIR}/generated/config.hpp"
-    @ONLY
-)
-
 find_package(OpenSSL REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS

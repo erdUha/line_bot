@@ -8,12 +8,6 @@
 <body>
   <h2>Defence Line Manager</h2>
   <button onclick="openLineDialog()">Create new line</button>
-  <button id="newUserButton"
-          style="display: none;"
-          onclick="openNewUserDialog()">
-            Add new user
-  </button>
-  <h3 style="display: none;" id="response"></h3>
 
   <dialog id="newLineDialog">
     <h3>Create Line</h3>
@@ -47,42 +41,26 @@
 
   <dialog id="registerDialog">
     <h3>Register an account</h3>
-    Group password:\nbsp
+    <p id="registerInfo"></p>
+    Group password:&nbsp
     <input
       type="password"
       id="groupPassword"
       required
     > <br><br>
-  </dialog>
-
-  <dialog id="newUserDialog">
-    <h3>Add new user</h3>
+    First name:&nbsp
     <input
       type="text"
-      id="newUserTgId"
-      placeholder="Telegram ID"
+      id="firstName"
       required
     > <br><br>
+    Last name:&nbsp
     <input
       type="text"
-      id="newUserName"
-      placeholder="Username"
+      id="lastName"
       required
     > <br><br>
-    <input
-      type="text"
-      id="newUserFirstName"
-      placeholder="First Name"
-      required
-    > <br><br>
-    <input
-      type="text"
-      id="newUserLastName"
-      placeholder="Last Name"
-    > <br><br>
-
-    <button onclick="addUser()">Add</button>
-    <button onclick="newUserDialog.close()">Cancel</button>
+    <button onclick="register()">Register</button>
   </dialog>
 
   <h3>Upcoming lines:</h3>

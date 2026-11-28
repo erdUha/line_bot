@@ -7,13 +7,13 @@
 
 #include "config.hpp"
 #include "handlers/users.hpp"
-#include "utils/tg.hpp"
+#include "utils.hpp"
 
 namespace handlers {
 
-httplib::Server::Handler new_user_handler(const std::string& bot_token)
+httplib::Server::Handler register_handler(const Config& config)
 {
-  return [bot_token](const httplib::Request& req, httplib::Response& res)
+  return [config](const httplib::Request& req, httplib::Response& res)
   {
     try
     {
@@ -28,7 +28,7 @@ httplib::Server::Handler new_user_handler(const std::string& bot_token)
         fields[key] = value;
       }
 
-      bool valid = utils::verify_init_data(init_data_str, fields, bot_token);
+      bool valid = utils::verify_init_data(init_data_str, fields, config.bot_token);
 
       if (!valid)
       {
@@ -45,27 +45,53 @@ httplib::Server::Handler new_user_handler(const std::string& bot_token)
       const auto user_json = nlohmann::json::parse(fields["user"]);
 
       std::int64_t telegram_id = user_json.at("id").get<std::int64_t>();
+      std::string username = user_json.at("username").get<std::string>();
 
-      bool is_admin = telegram_id == ADMIN_TG_ID;
+      std::string group_password = json_body.at("group_password").get<std::string>();
+      std::string first_name = json_body.at("first_name").get<std::string>();
+      std::string last_name = json_body.at("last_name").get<std::string>();
 
-      if (!is_admin)
+      bool is_input_fail = false;
+      std::string fail_message;
+
+      if (!utils::verify_bcrypt_hash(group_password, config.group_password_hash))
+      {
+        is_input_fail = true;
+        fail_message = "Wrong group password!";
+      }
+      if (first_name.size() < 2)
+      {
+        is_input_fail = true;
+        fail_message = "First name is too short! It's should be 2 characters or more!";
+      }
+      if (first_name.size() > 20)
+      {
+        is_input_fail = true;
+        fail_message = "First name is too long! It's shouldn't exceed 20 characters!";
+      }
+      if (!last_name.empty() && last_name.size() < 2)
+      {
+        is_input_fail = true;
+        fail_message = "Last name is too short! It's should be 2 characters or more!";
+      }
+      if (last_name.size() > 20)
+      {
+        is_input_fail = true;
+        fail_message = "Last name is too long! It's shouldn't exceed 20 characters!";
+      }
+
+      if (is_input_fail)
       {
         res.status = 401;
         nlohmann::json responseObj = {
           {"status", "failure"},
-          {"message", "You should be the admin to add new users!"}
+          {"message", fail_message}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;
       }
 
-      const auto new_user = json_body.at("new_user");
-      std::int64_t new_tg_id = new_user.at("telegram_id").get<std::int64_t>();
-      std::string new_username = new_user.at("username").get<std::string>();
-      std::string new_first_name = new_user.at("first_name").get<std::string>();
-      std::string new_last_name = new_user.at("last_name").get<std::string>();
-
-      pqxx::connection cx(DATABASE_URL);
+      pqxx::connection cx(config.database_url);
 
       pqxx::work w{cx};
 
@@ -74,7 +100,7 @@ httplib::Server::Handler new_user_handler(const std::string& bot_token)
       for (auto [q_fn] : w.query<std::string>(
               "SELECT first_name FROM users"
               "  WHERE telegram_id = $1 LIMIT 1",
-              new_tg_id
+              telegram_id
             )
           )
       {
@@ -86,7 +112,7 @@ httplib::Server::Handler new_user_handler(const std::string& bot_token)
         res.status = 401;
         nlohmann::json responseObj = {
           {"status", "failure"},
-          {"message", "User is already in the DB!"}
+          {"message", "User is already in the Database!"}
         };
         res.set_content(responseObj.dump(), "application/json");
         return;
@@ -95,17 +121,17 @@ httplib::Server::Handler new_user_handler(const std::string& bot_token)
       w.exec("INSERT INTO users"
              "  VALUES ($1, $2, $3, $4)",
              pqxx::params{
-                 new_tg_id,
-                 new_username,
-                 new_first_name,
-                 new_last_name
+                 telegram_id,
+                 username,
+                 first_name,
+                 last_name
                }
              );
       w.commit();
 
       nlohmann::json responseObj = {
         {"status", "success"},
-        {"message", "New user was registered successfully!"}
+        {"message", "Registered successfully!"}
       };
 
       res.set_content(responseObj.dump(), "application/json");

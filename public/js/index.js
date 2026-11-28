@@ -7,42 +7,6 @@ const username = tg.initDataUnsafe?.user?.username;
 const firstName = tg.initDataUnsafe?.user?.first_name;
 const lastName = tg.initDataUnsafe?.user?.last_name;
 
-is_admin = false;
-
-newUserButton = document.getElementById("newUserButton");
-responseH3 = document.getElementById("response");
-
-//document.getElementById("registerDialog").showModal();
-
-if (userId)
-{
-  fetch('/api/app_opened', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      initData: tg.initData
-    })
-  }).then(res => {
-    return res.json();
-  }).then(data => {
-    if (data.status !== "success") {
-      throw new Error(data.message || "Unknown server error");
-    }
-    is_admin = data.is_admin;
-    if (is_admin) {
-      newUserButton.style.display = "inline-block";
-    }
-    responseH3.innerText = "is_admin: " + data.is_admin;
-  }).catch(error => {
-    console.error("Failed to send: ", error);
-  });
-} else
-{
-  console.log("Not running inside Telegram.");
-}
-
 linesTableBody = document.getElementById("linesTable").tBodies[0];
 
 function getLines() {
@@ -60,7 +24,6 @@ function getLines() {
     if (data.status !== "success") {
       throw new Error(data.message || "Unknown server error");
     }
-    responseH3.innerText = data.lines.length;
     linesTableBody.innerHTML = '';
     data.lines.forEach(line => {
       let row = linesTableBody.insertRow();
@@ -78,7 +41,76 @@ function getLines() {
   });
 }
 
-getLines();
+if (userId)
+{
+  fetch('/api/app_opened', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      initData: tg.initData
+    })
+  }).then(res => {
+    return res.json();
+  }).then(data => {
+    if (data.status === "registration") {
+      openRegisterDialog(data.admin_username);
+      return;
+    }
+    if (data.status !== "success") {
+      throw new Error(data.message || "Unknown server error");
+    }
+    getLines();
+  }).catch(error => {
+    console.error("Failed to send: ", error);
+    Telegram.WebApp.showAlert(error);
+  });
+} else
+{
+  console.log("Not running inside Telegram.");
+}
+
+const registerInfo = document.getElementById("registerInfo");
+const registerDialog = document.getElementById("registerDialog");
+
+function openRegisterDialog(adminUsername) {
+  registerInfo.innerText = "Note: ask @" + adminUsername + " for group password";
+  registerDialog.showModal();
+}
+
+function register() {
+  const group_password = document.getElementById("groupPassword");
+  const firstName = document.getElementById("firstName");
+  const lastName = document.getElementById("lastName");
+
+  fetch('/api/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      initData: tg.initData,
+      group_password: group_password.value,
+      first_name: firstName.value.trim(),
+      last_name: lastName.value.trim()
+    })
+  }).then(res => {
+    return res.json();
+  }).then(data => {
+    if (data.status === "wrong") {
+      Telegram.WebApp.showAlert(data.message);
+    }
+    if (data.status === "success") {
+      registerDialog.close();
+      Telegram.WebApp.showAlert("Successfully registered!");
+    }
+    throw new Error(data.message || "Unknown server error");
+  }).catch(error => {
+    console.error("Failed to send: ", error);
+    Telegram.WebApp.showAlert("Failed to register!: " + error);
+  });
+}
 
 const newLineDialog = document.getElementById("newLineDialog");
 
@@ -122,48 +154,4 @@ function createLine() {
   });
 
   newLineDialog.close();
-}
-
-const newUserDialog = document.getElementById("newUserDialog");
-
-function openNewUserDialog() {
-  newUserDialog.showModal();
-}
-
-function addUser() {
-  if (!is_admin) {
-    Telegram.WebApp.showAlert("Not an admin!");
-    return;
-  }
-
-  const newUserTgId = Number(document.getElementById("newUserTgId").value);
-  const newUserName = document.getElementById("newUserName").value;
-  const newUserFirstName = document.getElementById("newUserFirstName").value;
-  const newUserLastName = document.getElementById("newUserLastName").value;
-
-  fetch('/api/admin/new_user', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      initData: tg.initData,
-      new_user: {
-        telegram_id: newUserTgId,
-        username: newUserName,
-        first_name: newUserFirstName,
-        last_name: newUserLastName
-      }
-    })
-  }).then(res => {
-    return res.json();
-  }).then(data => {
-    if (data.status !== "success") {
-      throw new Error(data.message || "Unknown server error");
-    }
-    Telegram.WebApp.showAlert(data.message);
-  }).catch(error => {
-    console.error("Failed to send: ", error);
-    Telegram.WebApp.showAlert("Server error: " + error.message);
-  });
 }
