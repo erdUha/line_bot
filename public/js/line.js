@@ -153,7 +153,7 @@ function joinGroup(position) {
     getReservations(lineId);
   }).catch(error => {
     console.error("Failed to send: ", error);
-    Telegram.WebApp.showAlert("Server error: " + error.message);
+    Telegram.WebApp.showAlert(error.message);
   });
 }
 
@@ -202,7 +202,7 @@ function createReservation() {
     getReservations(lineId);
   }).catch(error => {
     console.error("Failed to send: ", error);
-    Telegram.WebApp.showAlert("Server error: " + error.message);
+    Telegram.WebApp.showAlert(error.message);
   });
 
   reserveDialog.close();
