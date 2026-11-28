@@ -67,10 +67,3 @@ To run the project in docker mode use `docker compose`:
 ```bash
 sudo docker compose --env-file .env-docker up --build
 ```
-
-After any `.env-docker` changes run:
-
-```bash
-sudo docker compose --env-file .env-docker build --no-cache
-sudo docker compose --env-file .env-docker up
-```
